@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Doc Bay</title>
+	<title>DocBay</title>
 </head>
 <body>
 	<h1>Doc Bay</h1>
