@@ -1,0 +1,20 @@
+{
+	"ImportPath": "github.com/blachniet/docbay",
+	"GoVersion": "go1.6",
+	"GodepVersion": "v62",
+	"Deps": [
+		{
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v0.8.6-1-g8bca266",
+			"Rev": "8bca2664072173a3c71db4c28ca8d304079b1787"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "f15e0c49460fd49eebe2bcc8486b05d1bef68d3a"
+		}
+	]
+}
