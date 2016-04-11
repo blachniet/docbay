@@ -54,7 +54,7 @@ func main() {
 	}
 
 	// parse templates
-	tmpl, err := template.ParseGlob("tmpl/*.html.go")
+	tmpl, err := template.ParseGlob("templates/*.tmpl")
 	if err != nil {
 		log.WithField("err", err).Fatal("Failed to parse templates")
 	}
@@ -81,7 +81,7 @@ func GetIndex(app *App, w http.ResponseWriter, r *http.Request) *AppError {
 		return &AppError{err, "failed to read project tree", http.StatusInternalServerError}
 	}
 
-	err = app.Template.ExecuteTemplate(w, "index.html.go", map[string]interface{}{
+	err = app.Template.ExecuteTemplate(w, "index.tmpl", map[string]interface{}{
 		"ProjectVersions": data,
 	})
 	if err != nil {
