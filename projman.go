@@ -130,6 +130,11 @@ func (p ProjectManager) SetVersionDocs(project, version string, input io.Reader)
 	return nil
 }
 
+func (p ProjectManager) DeleteVersionDocs(project, version string) error {
+	dir := p.GetVersionDir(project, version)
+	return os.RemoveAll(dir)
+}
+
 func (p ProjectManager) GetProjectDir(project string) string {
 	return path.Join(p.ProjectDir, project)
 }

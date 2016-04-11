@@ -67,6 +67,7 @@ func main() {
 	r := mux.NewRouter()
 	r.Handle("/", AppHandler{app, GetIndex})
 	r.Handle("/_/upload", AppHandler{app, PostProjectDocs})
+	r.Handle("/_/delete", AppHandler{app, DeleteDocs})
 	r.Handle("/{project}", AppHandler{app, GetDefaultVersion})
 	r.Handle("/{project}/", AppHandler{app, GetDefaultVersion})
 	r.PathPrefix("/{project}/{version}/").Handler(AppHandler{app, GetProjectDocs})
@@ -131,6 +132,22 @@ func PostProjectDocs(app *App, w http.ResponseWriter, r *http.Request) *AppError
 	err = app.Projects.SetVersionDocs(project, version, formFile)
 	if err != nil {
 		return &AppError{err, "failed to add version", http.StatusInternalServerError}
+	}
+
+	http.Redirect(w, r, "/", http.StatusFound)
+	return nil
+}
+
+func DeleteDocs(app *App, w http.ResponseWriter, r *http.Request) *AppError {
+	project := r.URL.Query().Get("project")
+	version := r.URL.Query().Get("version")
+	if project == "" || version == "" {
+		return &AppError{nil, "Could not understand request", http.StatusBadRequest}
+	}
+
+	err := app.Projects.DeleteVersionDocs(project, version)
+	if err != nil {
+		return &AppError{err, "Error deleting docs", http.StatusInternalServerError}
 	}
 
 	http.Redirect(w, r, "/", http.StatusFound)

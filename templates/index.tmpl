@@ -12,7 +12,7 @@
 		<li>{{$key}}
 			<ul>
 				{{range $val}}
-				<li><a href="/{{$key}}/{{.}}/">{{.}}</a></li>
+				<li><strong><a href="/{{$key}}/{{.}}/">{{.}}</a></strong>&nbsp;[<a href="/_/delete?project={{$key}}&amp;version={{.}}">delete</a>]</li>
 				{{end}}
 			</ul>
 		</li>
