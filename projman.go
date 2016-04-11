@@ -63,7 +63,7 @@ func (p ProjectManager) GetProjectVersionMap() (map[string][]string, error) {
 	return result, nil
 }
 
-func (p ProjectManager) AddProject(project, version string, input io.Reader) error {
+func (p ProjectManager) SetVersionDocs(project, version string, input io.Reader) error {
 	// Copy the input to a temporary location
 	tmpFile, err := ioutil.TempFile(p.TempDir, "upfile_")
 	if err != nil {

@@ -117,7 +117,7 @@ func TestGetVersionDir(t *testing.T) {
 	}
 }
 
-func TestAddProject(t *testing.T) {
+func TestSetVersionDocs(t *testing.T) {
 	pm := ProjectManager{"_test_data/t0", "_test_data/tmp"}
 
 	// Ensure the version dir gets deleted
@@ -136,10 +136,10 @@ func TestAddProject(t *testing.T) {
 	}
 	defer input.Close()
 
-	// Add it
-	err = pm.AddProject("proj0", "v1", input)
+	// Set it
+	err = pm.SetVersionDocs("proj0", "v1", input)
 	if err != nil {
-		t.Fatal("unexpected error adding project: ", err)
+		t.Fatal("unexpected error setting version docs: ", err)
 	}
 
 	// Ensure it's there

@@ -128,7 +128,7 @@ func PostProjectDocs(app *App, w http.ResponseWriter, r *http.Request) *AppError
 	}
 	defer formFile.Close()
 
-	err = app.Projects.AddProject(project, version, formFile)
+	err = app.Projects.SetVersionDocs(project, version, formFile)
 	if err != nil {
 		return &AppError{err, "failed to add version", http.StatusInternalServerError}
 	}
