@@ -2,6 +2,9 @@
 <html>
 <head>
 	<title>DocBay</title>
+	<style type="text/css">
+		.error{ color: red; }
+	</style>
 </head>
 <body>
 	<h1>Doc Bay</h1>
@@ -20,17 +23,34 @@
 	</ul>
 
 	<h2>Upload Docs</h2>
-	<form enctype="multipart/form-data" action="/_/upload" method="post">
-		<label for="project">Project</label>
-		<input type="text" name="project" id="project" />
-		<br/>
-		<label for="version">Version</label>
-		<input type="text" name="version" id="version" />
-		<br/>
-		<label for="content">Content</label>
-		<input type="file" name="content" />
-		<br/>
-		<input type="submit" value="Upload" />
+	<form enctype="multipart/form-data" action="/_/upload" method="post" novalidate>
+		{{with .UploadErrors.General}}
+		<p class="error">{{.}}</p>
+		{{end}}
+		<div>
+			<label>Project</label>
+			<input type="text" name="project" value="{{.Project}}"/>
+			{{with .UploadErrors.Project}}
+			<p class="error">{{.}}</p>
+			{{end}}
+		</div>
+		<div>
+			<label>Version</label>
+			<input type="text" name="version" value="{{.Version}}"/>
+			{{with .UploadErrors.Version}}
+			<p class="error">{{.}}</p>
+			{{end}}
+		</div>
+		<div>
+			<label>Content</label>
+			<input type="file" name="content" />
+			{{with .UploadErrors.Content}}
+			<p class="error">{{.}}</p>
+			{{end}}
+		</div>
+		<div>
+			<input type="submit" value="Upload" />
+		</div>
 	</form>
 </body>
 </html>

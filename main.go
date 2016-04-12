@@ -77,14 +77,12 @@ func main() {
 }
 
 func GetIndex(app *App, w http.ResponseWriter, r *http.Request) *AppError {
-	data, err := app.Projects.GetProjectVersionMap()
+	m, err := NewIndexModel(app)
 	if err != nil {
 		return &AppError{err, "failed to read project tree", http.StatusInternalServerError}
 	}
 
-	err = app.Template.ExecuteTemplate(w, "index.tmpl", map[string]interface{}{
-		"ProjectVersions": data,
-	})
+	err = app.Template.ExecuteTemplate(w, "index.tmpl", m)
 	if err != nil {
 		return &AppError{err, "render err", http.StatusInternalServerError}
 	}
@@ -112,29 +110,31 @@ func GetProjectDocs(app *App, w http.ResponseWriter, r *http.Request) *AppError 
 }
 
 func PostProjectDocs(app *App, w http.ResponseWriter, r *http.Request) *AppError {
-	err := r.ParseMultipartForm(0)
+	m, err := NewIndexModel(app)
 	if err != nil {
-		return &AppError{err, "Could not understand request", http.StatusBadRequest}
+		return &AppError{err, "failed to read project tree", http.StatusInternalServerError}
 	}
 
-	project := r.Form.Get("project")
-	version := r.Form.Get("version")
-	if project == "" || version == "" {
-		return &AppError{err, "Could not understand request", http.StatusBadRequest}
+	ok := m.ParseForm(r)
+	if m.Content != nil {
+		defer m.Content.Close()
 	}
 
-	formFile, _, err := r.FormFile("content")
+	if ok {
+		err := app.Projects.SetVersionDocs(m.Project, m.Version, m.Content)
+		if err != nil {
+			log.WithField("err", err).Error("failed to add version docs")
+			return &AppError{err, "failed to add version", http.StatusInternalServerError}
+		} else {
+			http.Redirect(w, r, "/", http.StatusFound)
+			return nil
+		}
+	}
+
+	err = app.Template.ExecuteTemplate(w, "index.tmpl", m)
 	if err != nil {
-		return &AppError{err, "Could not open file", http.StatusInternalServerError}
+		return &AppError{err, "render err", http.StatusInternalServerError}
 	}
-	defer formFile.Close()
-
-	err = app.Projects.SetVersionDocs(project, version, formFile)
-	if err != nil {
-		return &AppError{err, "failed to add version", http.StatusInternalServerError}
-	}
-
-	http.Redirect(w, r, "/", http.StatusFound)
 	return nil
 }
 
